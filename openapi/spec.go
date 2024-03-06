@@ -93,7 +93,30 @@ type PathItem struct {
 // other components in the specification, internally and
 // externally.
 type Reference struct {
+	Ref      string `json:"$ref" yaml:"$ref"`
+	Nullable bool   `json:"-" yaml:"-"`
+}
+
+type JustReference struct {
 	Ref string `json:"$ref" yaml:"$ref"`
+}
+
+// MarshalYAML implements yaml.Marshaler for Reference.
+// Needed to marshall nillable refs.
+func (r *Reference) MarshalYAML() (interface{}, error) {
+	if r.Nullable {
+		return &Schema{
+			Nullable: true,
+			AllOf: []*SchemaOrRef{&SchemaOrRef{
+				Reference: &Reference{
+					Ref: r.Ref,
+				},
+			}},
+		}, nil
+	}
+	return &JustReference{
+		Ref: r.Ref,
+	}, nil
 }
 
 // Parameter describes a single operation parameter.
@@ -153,9 +176,9 @@ type Schema struct {
 	// definition but their definitions were adjusted to the
 	// OpenAPI Specification.
 	Type                 string                  `json:"type,omitempty" yaml:"type,omitempty"`
-	AllOf                *SchemaOrRef            `json:"allOf,omitempty" yaml:"allOf,omitempty"`
-	OneOf                *SchemaOrRef            `json:"oneOf,omitempty" yaml:"oneOf,omitempty"`
-	AnyOf                *SchemaOrRef            `json:"anyOf,omitempty" yaml:"anyOf,omitempty"`
+	AllOf                []*SchemaOrRef          `json:"allOf,omitempty" yaml:"allOf,omitempty"`
+	OneOf                []*SchemaOrRef          `json:"oneOf,omitempty" yaml:"oneOf,omitempty"`
+	AnyOf                []*SchemaOrRef          `json:"anyOf,omitempty" yaml:"anyOf,omitempty"`
 	Items                *SchemaOrRef            `json:"items,omitempty" yaml:"items,omitempty"`
 	Properties           map[string]*SchemaOrRef `json:"properties,omitempty" yaml:"properties,omitempty"`
 	AdditionalProperties *SchemaOrRef            `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`

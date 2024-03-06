@@ -893,9 +893,9 @@ func (g *Generator) newSchemaFromType(t reflect.Type) *SchemaOrRef {
 	if dt == TypeComplex {
 		switch t.Kind() {
 		case reflect.Slice, reflect.Array, reflect.Map:
-			return g.buildSchemaRecursive(t)
+			return g.buildSchemaRecursive(t, nullable)
 		case reflect.Struct:
-			return g.newSchemaFromStruct(t)
+			return g.newSchemaFromStruct(t, nullable)
 		}
 	}
 	if dt == TypeAny {
@@ -916,14 +916,14 @@ func (g *Generator) newSchemaFromType(t reflect.Type) *SchemaOrRef {
 
 // buildSchemaRecursive recursively decomposes the complex
 // type t into subsequent schemas.
-func (g *Generator) buildSchemaRecursive(t reflect.Type) *SchemaOrRef {
+func (g *Generator) buildSchemaRecursive(t reflect.Type, nullable bool) *SchemaOrRef {
 	schema := &Schema{}
 
 	switch t.Kind() {
 	case reflect.Ptr:
-		return g.buildSchemaRecursive(t.Elem())
+		return g.buildSchemaRecursive(t.Elem(), true)
 	case reflect.Struct:
-		return g.newSchemaFromStruct(t)
+		return g.newSchemaFromStruct(t, nullable)
 	case reflect.Map:
 		// Map type is considered as a type "object"
 		// and should declare underlying items type
@@ -938,29 +938,30 @@ func (g *Generator) buildSchemaRecursive(t reflect.Type) *SchemaOrRef {
 			})
 			return nil
 		}
-		schema.AdditionalProperties = g.buildSchemaRecursive(t.Elem())
+		schema.AdditionalProperties = g.buildSchemaRecursive(t.Elem(), false)
 	case reflect.Slice, reflect.Array:
 		// Slice/Array types are considered as a type
 		// "array" and should declare underlying items
 		// type in items field.
 		schema.Type = "array"
+		schema.Nullable = nullable
 
 		// Go arrays have fixed size.
 		if t.Kind() == reflect.Array {
 			schema.MinItems = t.Len()
 			schema.MaxItems = t.Len()
 		}
-		schema.Items = g.buildSchemaRecursive(t.Elem())
+		schema.Items = g.buildSchemaRecursive(t.Elem(), false)
 	default:
 		dt := g.datatype(t)
-		schema.Type, schema.Format = dt.Type(), dt.Format()
+		schema.Type, schema.Format, schema.Nullable = dt.Type(), dt.Format(), nullable
 	}
 	return &SchemaOrRef{Schema: schema}
 }
 
 // structSchema returns an OpenAPI schema that describe
 // the Go struct represented by the type t.
-func (g *Generator) newSchemaFromStruct(t reflect.Type) *SchemaOrRef {
+func (g *Generator) newSchemaFromStruct(t reflect.Type, nullable bool) *SchemaOrRef {
 	if t.Kind() != reflect.Struct {
 		return nil
 	}
@@ -972,7 +973,8 @@ func (g *Generator) newSchemaFromStruct(t reflect.Type) *SchemaOrRef {
 	// because there is no guarantee the generation is complete yet.
 	if _, ok := g.schemaTypes[t]; ok {
 		return &SchemaOrRef{Reference: &Reference{
-			Ref: componentsSchemaPath + name,
+			Nullable: nullable,
+			Ref:      componentsSchemaPath + name,
 		}}
 	}
 	schema := &Schema{
@@ -996,7 +998,8 @@ func (g *Generator) newSchemaFromStruct(t reflect.Type) *SchemaOrRef {
 		g.api.Components.Schemas[name] = sor
 
 		return &SchemaOrRef{Reference: &Reference{
-			Ref: componentsSchemaPath + name,
+			Nullable: nullable,
+			Ref:      componentsSchemaPath + name,
 		}}
 	}
 	// Return an inlined schema for types with no name.
@@ -1255,7 +1258,7 @@ func fieldNameFromTag(sf reflect.StructField, tagName string) string {
 	return name
 }
 
-/// parseExampleValue is used to transform the string representation of the example value to the correct type.
+// / parseExampleValue is used to transform the string representation of the example value to the correct type.
 func parseExampleValue(t reflect.Type, value string) (interface{}, error) {
 	// If the type implements Exampler use the ParseExample method to create the example
 	i, ok := reflect.New(t).Interface().(Exampler)
