@@ -1070,10 +1070,31 @@ func (g *Generator) flattenStructSchema(t, parent reflect.Type, schema *Schema) 
 	return schema
 }
 
-// isStructFieldRequired returns whether a struct field
-// is required. A field is always required unless it's marked as omitempty in
-// the json or yaml tag.
+// isStructFieldRequired returns whether a struct field is required. A normal
+// struct field is always required unless it's marked as omitempty in the json
+// or yaml tag. Query arguments are not required unless specifically configured.
 func (g *Generator) isStructFieldRequired(sf reflect.StructField) bool {
+	// Query arguments are not required by default, unless specifically
+	// configured using the validator.
+	if t, ok := sf.Tag.Lookup("query"); ok && t != "" {
+		if t, ok := sf.Tag.Lookup(g.config.ValidatorTag); ok {
+			options := strings.Split(t, ",")
+			for _, o := range options {
+				// As soon as we see a 'dive' or 'keys'
+				// options, the following options won't
+				// apply to the given field.
+				if o == "dive" || o == "keys" {
+					return false
+				}
+				if o == "required" {
+					return true
+				}
+			}
+		}
+		return false
+	}
+
+	// Normal struct tags are always required unless configured as omitempty.
 	if t, ok := sf.Tag.Lookup("json"); ok {
 		if strings.Contains(t, "omitempty") {
 			return false
