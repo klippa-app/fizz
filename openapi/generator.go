@@ -938,7 +938,13 @@ func (g *Generator) buildSchemaRecursive(t reflect.Type, nullable bool) *SchemaO
 			})
 			return nil
 		}
-		schema.AdditionalProperties = g.buildSchemaRecursive(t.Elem(), false)
+
+		mapSchema := g.newSchemaFromType(t.Elem())
+		if mapSchema == nil {
+			mapSchema = &SchemaOrRef{Schema: &Schema{}}
+		}
+
+		schema.AdditionalProperties = mapSchema
 	case reflect.Slice, reflect.Array:
 		// Slice/Array types are considered as a type
 		// "array" and should declare underlying items
@@ -951,7 +957,13 @@ func (g *Generator) buildSchemaRecursive(t reflect.Type, nullable bool) *SchemaO
 			schema.MinItems = t.Len()
 			schema.MaxItems = t.Len()
 		}
-		schema.Items = g.buildSchemaRecursive(t.Elem(), false)
+
+		arraySchema := g.newSchemaFromType(t.Elem())
+		if arraySchema == nil {
+			arraySchema = &SchemaOrRef{Schema: &Schema{}}
+		}
+
+		schema.Items = arraySchema
 	default:
 		dt := g.datatype(t)
 		schema.Type, schema.Format, schema.Nullable = dt.Type(), dt.Format(), nullable
