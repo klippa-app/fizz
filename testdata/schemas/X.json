@@ -1,95 +1,115 @@
 {
-    "type": "object",
-    "properties": {
-        "A": {
-            "type": "string"
-        },
-        "B": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-        },
-        "C": {
-            "type": "boolean",
-            "deprecated": true
-        },
-        "D": {
-            "type": "array",
-            "items": {
-                "$ref": "#/components/schemas/Y"
-            }
-        },
-        "E": {
-            "type": "array",
-            "items": {
-                "$ref": "#/components/schemas/XXX"
-            },
-            "maxItems": 3,
-            "minItems": 3
-        },
-        "F": {
-            "$ref": "#/components/schemas/XXX"
-        },
-        "G": {
-            "$ref": "#/components/schemas/Y"
-        },
-        "H": {
-            "type": "number",
-            "format": "float"
-        },
-        "I": {
-            "type": "string",
-            "format": "date"
-        },
-        "J": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-        },
-        "K": {
-            "type": "object",
-            "additionalProperties": {
-                "$ref": "#/components/schemas/Y"
-            }
-        },
-        "N": {
-            "type": "object",
-            "properties": {
-                "Na": {
-                    "type": "string"
-                },
-                "Nb": {
-                    "type": "string"
-                },
-                "Nc": {
-                    "type": "string",
-                    "format": "duration"
-                }
-            }
-        },
-        "S": {
-            "type": "integer",
-            "format": "int32"
-        },
-        "nnNnnN":{
-            "type":"string"
-        },
-        "data": {
-            "$ref": "#/components/schemas/V"
-        },
-        "NS": {
-            "nullable": true,
-            "type": "string"
-        },
-        "NI" : {
-            "nullable": true,
-            "type": "integer",
-            "format": "int32"
-        }
+  "type": "object",
+  "properties": {
+    "A": {
+      "type": "string"
     },
-    "required": [
-        "A",
-        "H",
-        "K"
-    ]
+    "B": {
+      "type": "integer",
+      "format": "int32",
+      "nullable": true
+    },
+    "C": {
+      "type": "boolean",
+      "deprecated": true
+    },
+    "D": {
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/Y"
+      }
+    },
+    "E": {
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/XXX"
+      },
+      "maxItems": 3,
+      "minItems": 3
+    },
+    "F": {
+      "$ref": "#/components/schemas/XXX"
+    },
+    "G": {
+      "$ref": "#/components/schemas/Y"
+    },
+    "H": {
+      "type": "number",
+      "format": "float"
+    },
+    "I": {
+      "type": "string",
+      "format": "date"
+    },
+    "J": {
+      "type": "integer",
+      "format": "int32",
+      "nullable": true
+    },
+    "K": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/components/schemas/Y"
+      }
+    },
+    "N": {
+      "type": "object",
+      "properties": {
+        "Na": {
+          "type": "string"
+        },
+        "Nb": {
+          "type": "string"
+        },
+        "Nc": {
+          "type": "string",
+          "format": "duration"
+        }
+      },
+      "required": [
+        "Na",
+        "Nb",
+        "Nc"
+      ]
+    },
+    "NI": {
+      "type": "integer",
+      "format": "int32",
+      "nullable": true
+    },
+    "NS": {
+      "type": "string",
+      "nullable": true
+    },
+    "S": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "data": {
+      "$ref": "#/components/schemas/V"
+    },
+    "nnNnnN": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "H",
+    "I",
+    "J",
+    "K",
+    "N",
+    "NI",
+    "NS",
+    "S",
+    "data",
+    "nnNnnN"
+  ]
 }

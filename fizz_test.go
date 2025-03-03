@@ -415,7 +415,7 @@ func TestSpecHandler(t *testing.T) {
 		t.Error(err)
 	}
 	if !m {
-		t.Error("invalid JSON spec")
+		t.Errorf("expected JSON outputs to be equal, got: %s, wanted: %s", string(specJSON), string(expectedJSON))
 	}
 
 	respYAML, err := c.Get(srv.URL + "/openapi.yaml")
@@ -440,7 +440,7 @@ func TestSpecHandler(t *testing.T) {
 		t.Error(err)
 	}
 	if !m {
-		t.Error("invalid YAML spec")
+		t.Errorf("expected YAML outputs to be equal, got: %s, wanted: %s", string(specYAML), string(expectedYAML))
 	}
 }
 

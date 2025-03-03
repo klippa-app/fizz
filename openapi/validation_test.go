@@ -61,6 +61,6 @@ func TestSchemaValidation(t *testing.T) {
 		t.Error(err)
 	}
 	if !m {
-		t.Error("expected json outputs to be equal")
+		t.Errorf("expected json outputs to be equal, got: %s, wanted: %s", string(actual), string(expected))
 	}
 }

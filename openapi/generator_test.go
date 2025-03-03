@@ -143,7 +143,7 @@ func TestSchemaFromPrimitiveType(t *testing.T) {
 	}
 	assert.Equal(t, "integer", schema.Type)
 	assert.Equal(t, "int64", schema.Format)
-	assert.True(t, schema.Nullable)
+	assert.True(t, schema.Schema.Nullable)
 }
 
 // TestSchemaFromInterface tests that a schema
@@ -156,7 +156,7 @@ func TestSchemaFromInterface(t *testing.T) {
 	assert.NotNil(t, schema)
 	assert.Empty(t, schema.Type)
 	assert.Empty(t, schema.Format)
-	assert.True(t, schema.Nullable)
+	assert.True(t, schema.Schema.Nullable)
 	assert.NotEmpty(t, schema.Description)
 }
 
@@ -222,7 +222,7 @@ func TestSchemaFromComplex(t *testing.T) {
 		t.Error(err)
 	}
 	if !m {
-		t.Error("expected json outputs to be equal")
+		t.Errorf("expected json outputs to be equal, got: %s, wanted: %s", string(actual), string(expected))
 	}
 
 	sor = g.API().Components.Schemas["Y"]
@@ -243,7 +243,7 @@ func TestSchemaFromComplex(t *testing.T) {
 		t.Error(err)
 	}
 	if !m {
-		t.Error("expected json outputs to be equal")
+		t.Errorf("expected json outputs to be equal, got: %s, wanted: %s", string(actual), string(expected))
 	}
 }
 
@@ -253,7 +253,7 @@ func TestNewSchemaFromStructErrors(t *testing.T) {
 	g := gen(t)
 
 	// Invalid input.
-	sor := g.newSchemaFromStruct(reflect.TypeOf(new(string)))
+	sor := g.newSchemaFromStruct(reflect.TypeOf(new(string)), true)
 	assert.Nil(t, sor)
 }
 
@@ -559,7 +559,7 @@ func TestAddOperation(t *testing.T) {
 		t.Error(err)
 	}
 	if !m {
-		t.Error("expected json outputs to be equal")
+		t.Errorf("expected json outputs to be equal, got: %s, wanted: %s", string(actual), string(expected))
 	}
 	// Try to add the operation again with the same
 	// identifier. Expected to fail.
