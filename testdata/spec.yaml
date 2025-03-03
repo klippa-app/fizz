@@ -128,6 +128,8 @@ components:
     FizzT:
       type: object
       properties:
+        w:
+          $ref: '#/components/schemas/FizzW[Github.Com/WI2L/Fizz.X]'
         x:
           type: string
           description: This is X
@@ -138,9 +140,27 @@ components:
         z:
           $ref: '#/components/schemas/FizzCustomTime'
       required:
+        - w
         - x
         - "y"
         - z
+    FizzW[Github.Com/WI2L/Fizz.X]:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/FizzX'
+      required:
+        - data
+    FizzX:
+      type: object
+      properties:
+        value:
+          type: integer
+          description: This is Value
+          format: int32
+      description: This is Data
+      required:
+        - value
     PostTestInput:
       type: object
       properties:

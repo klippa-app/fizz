@@ -64,8 +64,11 @@ type (
 			Na, Nb string
 			Nc     time.Duration
 		}
-		l int // ignored
-		M int `json:"-"`
+		l  int // ignored
+		M  int `json:"-"`
+		G  *G[V]
+		G2 G[V]
+		G3 G[*V]
 	}
 	Z map[string]*Y
 	Q struct {
@@ -73,6 +76,9 @@ type (
 	}
 	V struct {
 		L int
+	}
+	G[T any] struct {
+		Data T
 	}
 )
 

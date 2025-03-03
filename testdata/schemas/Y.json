@@ -1,6 +1,15 @@
 {
   "type": "object",
   "properties": {
+    "G": {
+      "$ref": "#/components/schemas/G[Github.Com/WI2L/Fizz/Openapi.V]"
+    },
+    "G2": {
+      "$ref": "#/components/schemas/G[Github.Com/WI2L/Fizz/Openapi.V]"
+    },
+    "G3": {
+      "$ref": "#/components/schemas/G[*Github.Com/WI2L/Fizz/Openapi.V]"
+    },
     "H": {
       "type": "number",
       "format": "float"
@@ -42,6 +51,9 @@
     }
   },
   "required": [
+    "G",
+    "G2",
+    "G3",
     "H",
     "I",
     "J",
