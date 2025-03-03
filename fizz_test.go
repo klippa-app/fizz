@@ -207,7 +207,7 @@ func TestTonicHandler(t *testing.T) {
 				"X-Test-C": []string{"foobaz"},
 			},
 			expectStatus: 200,
-			expectBody:   `{"x":"foo","y":1,"z":"2022-02-07T18:00:00"}`,
+			expectBody:   `{"x":"foo","y":1,"z":"2022-02-07T18:00:00","w":{"data":{"value":0}}}`,
 		},
 		{
 			url:    "/test/bar/42?b=group-foobar",
@@ -216,7 +216,7 @@ func TestTonicHandler(t *testing.T) {
 				"X-Test-C": []string{"group-foobaz"},
 			},
 			expectStatus: 200,
-			expectBody:   `{"x":"group-foo","y":2,"z":"2022-02-07T18:00:00"}`,
+			expectBody:   `{"x":"group-foo","y":2,"z":"2022-02-07T18:00:00","w":{"data":{"value":0}}}`,
 		},
 		{
 			url:    "/bar/42?b=group-foobar",
