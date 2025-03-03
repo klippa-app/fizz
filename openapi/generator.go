@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"reflect"
 	"regexp"
 	"sort"
@@ -1202,6 +1203,7 @@ func (g *Generator) typeName(t reflect.Type) string {
 		}
 	}
 	name := t.String() // package.name.
+
 	sp := strings.Index(name, ".")
 	pkg := name[:sp]
 
@@ -1213,9 +1215,9 @@ func (g *Generator) typeName(t reflect.Type) string {
 	typ := name[sp+1:]
 
 	if !g.fullNames {
-		return strings.Title(typ)
+		return url.QueryEscape(strings.Title(typ))
 	}
-	return strings.Title(pkg) + strings.Title(typ)
+	return url.QueryEscape(strings.Title(pkg) + strings.Title(typ))
 }
 
 // updateSchemaValidation fills the fields of the schema
