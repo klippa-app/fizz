@@ -147,6 +147,11 @@ type W[T any] struct {
 	Data T `json:"data" yaml:"data" description:"This is Data"`
 }
 
+type F[T any, K string] struct {
+	Data T `json:"data" yaml:"data" description:"This is Data"`
+	Key  K `json:"key" yaml:"key" description:"This is Key"`
+}
+
 type T struct {
 	X string     `json:"x" yaml:"x" description:"This is X"`
 	Y int        `json:"y" yaml:"y" description:"This is Y"`

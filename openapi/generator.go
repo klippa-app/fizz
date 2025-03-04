@@ -1212,7 +1212,59 @@ func (g *Generator) typeName(t reflect.Type) string {
 	if pkg == "main" {
 		pkg = ""
 	}
+
 	typ := name[sp+1:]
+
+	// Identity the generic part of the name.
+	genericIndex := strings.Index(typ, "[")
+	if genericIndex > -1 {
+		// Retrieve the generic name part.
+		genericName := typ[genericIndex+1 : len(typ)-1]
+
+		// Remove the generic part from the original type name.
+		typ = typ[:genericIndex]
+
+		// Split up the generic name in case multiple generics were used.
+		genericNameParts := strings.Split(genericName, ",")
+
+		// Loop over the generic types
+		for i := range genericNameParts {
+			// Strip off the pkg path, since fizz doesn't use this for normal
+			// types either.
+			lastSlashIndex := strings.LastIndex(genericNameParts[i], "/")
+			if lastSlashIndex > -1 {
+				genericNameParts[i] = genericNameParts[i][lastSlashIndex+1:]
+			}
+
+			// Split off the pkg form the name.
+			genericNameSp := strings.Index(genericNameParts[i], ".")
+			if genericNameSp > -1 {
+				// Split off the package name from the type name.
+				genericNamePkg := genericNameParts[i][:genericNameSp]
+
+				// If the package is the main package, remove
+				// the package part from the name.
+				if genericNamePkg == "main" {
+					genericNamePkg = ""
+				}
+
+				if !g.fullNames {
+					// If we don't want full names, just return the type name.
+					genericNameParts[i] = strings.Title(genericNameParts[i][genericNameSp+1:])
+				} else {
+					// If we do want full names, attach the package name to the type name.
+					genericNameParts[i] = strings.Title(genericNamePkg) + strings.Title(genericNameParts[i][genericNameSp+1:])
+				}
+			} else {
+				// If we don't have a package name, just make a title out of
+				// the type name.
+				genericNameParts[i] = strings.Title(genericNameParts[i])
+			}
+		}
+
+		// Rebuild the type string.
+		typ += "[" + strings.Join(genericNameParts, ",") + "]"
+	}
 
 	if !g.fullNames {
 		return url.QueryEscape(strings.Title(typ))

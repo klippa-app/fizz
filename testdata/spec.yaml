@@ -129,7 +129,7 @@ components:
       type: object
       properties:
         w:
-          $ref: '#/components/schemas/FizzW%5BGithub.Com%2FWI2L%2FFizz.X%5D'
+          $ref: '#/components/schemas/FizzW%5BFizzX%5D'
         x:
           type: string
           description: This is X
@@ -144,7 +144,7 @@ components:
         - x
         - "y"
         - z
-    FizzW%5BGithub.Com%2FWI2L%2FFizz.X%5D:
+    FizzW%5BFizzX%5D:
       type: object
       properties:
         data:

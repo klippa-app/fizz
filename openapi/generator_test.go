@@ -69,6 +69,9 @@ type (
 		G  *G[V]
 		G2 G[V]
 		G3 G[*V]
+		F  *F[V, string]
+		F2 F[V, string]
+		F3 F[*V, string]
 	}
 	Z map[string]*Y
 	Q struct {
@@ -79,6 +82,10 @@ type (
 	}
 	G[T any] struct {
 		Data T
+	}
+	F[T any, K string] struct {
+		Data T
+		Key  K
 	}
 )
 

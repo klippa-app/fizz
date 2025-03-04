@@ -1,14 +1,23 @@
 {
   "type": "object",
   "properties": {
+    "F": {
+      "$ref": "#/components/schemas/F%5BV%2CString%5D"
+    },
+    "F2": {
+      "$ref": "#/components/schemas/F%5BV%2CString%5D"
+    },
+    "F3": {
+      "$ref": "#/components/schemas/F%5BV%2CString%5D"
+    },
     "G": {
-      "$ref": "#/components/schemas/G%5BGithub.Com%2FWI2L%2FFizz%2FOpenapi.V%5D"
+      "$ref": "#/components/schemas/G%5BV%5D"
     },
     "G2": {
-      "$ref": "#/components/schemas/G%5BGithub.Com%2FWI2L%2FFizz%2FOpenapi.V%5D"
+      "$ref": "#/components/schemas/G%5BV%5D"
     },
     "G3": {
-      "$ref": "#/components/schemas/G%5B%2AGithub.Com%2FWI2L%2FFizz%2FOpenapi.V%5D"
+      "$ref": "#/components/schemas/G%5BV%5D"
     },
     "H": {
       "type": "number",
@@ -51,6 +60,9 @@
     }
   },
   "required": [
+    "F",
+    "F2",
+    "F3",
     "G",
     "G2",
     "G3",
