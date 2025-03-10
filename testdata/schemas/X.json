@@ -31,19 +31,19 @@
       "$ref": "#/components/schemas/XXX"
     },
     "F2": {
-      "$ref": "#/components/schemas/F%5BV%2CString%5D"
+      "$ref": "#/components/schemas/F_V_String_"
     },
     "F3": {
-      "$ref": "#/components/schemas/F%5BV%2CString%5D"
+      "$ref": "#/components/schemas/F_V_String_"
     },
     "G": {
       "$ref": "#/components/schemas/Y"
     },
     "G2": {
-      "$ref": "#/components/schemas/G%5BV%5D"
+      "$ref": "#/components/schemas/G_V_"
     },
     "G3": {
-      "$ref": "#/components/schemas/G%5BV%5D"
+      "$ref": "#/components/schemas/G_V_"
     },
     "H": {
       "type": "number",
@@ -111,14 +111,11 @@
     "D",
     "E",
     "F",
-    "F",
     "F2",
     "F3",
     "G",
-    "G",
     "G2",
     "G3",
-    "H",
     "H",
     "I",
     "J",

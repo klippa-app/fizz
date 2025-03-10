@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"reflect"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -27,6 +28,7 @@ const (
 var (
 	paramsInPathRe = regexp.MustCompile(`\{(.*?)\}`)
 	ginPathParamRe = regexp.MustCompile(`\/:([^\/]*)`)
+	refRe          = regexp.MustCompile(`[^a-zA-Z0-9.\-_]`) // Allowed characters in ref names.
 )
 
 // mediaTags maps media types to well-known
@@ -642,6 +644,9 @@ func (g *Generator) addStructFieldToOperation(op *Operation, t reflect.Type, idx
 			required = true
 			schema.Required = append(schema.Required, fname)
 			sort.Strings(schema.Required)
+
+			// Filter out duplicates.
+			schema.Required = slices.Compact(schema.Required)
 		}
 		sfs := g.newSchemaFromStructField(sf, required, fname, t)
 		if schema != nil {
@@ -1074,6 +1079,9 @@ func (g *Generator) flattenStructSchema(t, parent reflect.Type, schema *Schema) 
 			required = true
 			schema.Required = append(schema.Required, fname)
 			sort.Strings(schema.Required)
+
+			// Filter out duplicates.
+			schema.Required = slices.Compact(schema.Required)
 		}
 		sfs := g.newSchemaFromStructField(f, required, fname, t)
 		if sfs != nil {
@@ -1267,9 +1275,9 @@ func (g *Generator) typeName(t reflect.Type) string {
 	}
 
 	if !g.fullNames {
-		return url.QueryEscape(strings.Title(typ))
+		return url.QueryEscape(refRe.ReplaceAllString(strings.Title(typ), "_"))
 	}
-	return url.QueryEscape(strings.Title(pkg) + strings.Title(typ))
+	return url.QueryEscape(refRe.ReplaceAllString(strings.Title(pkg)+strings.Title(typ), "_"))
 }
 
 // updateSchemaValidation fills the fields of the schema

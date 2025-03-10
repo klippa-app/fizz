@@ -2,22 +2,22 @@
   "type": "object",
   "properties": {
     "F": {
-      "$ref": "#/components/schemas/F%5BV%2CString%5D"
+      "$ref": "#/components/schemas/F_V_String_"
     },
     "F2": {
-      "$ref": "#/components/schemas/F%5BV%2CString%5D"
+      "$ref": "#/components/schemas/F_V_String_"
     },
     "F3": {
-      "$ref": "#/components/schemas/F%5BV%2CString%5D"
+      "$ref": "#/components/schemas/F_V_String_"
     },
     "G": {
-      "$ref": "#/components/schemas/G%5BV%5D"
+      "$ref": "#/components/schemas/G_V_"
     },
     "G2": {
-      "$ref": "#/components/schemas/G%5BV%5D"
+      "$ref": "#/components/schemas/G_V_"
     },
     "G3": {
-      "$ref": "#/components/schemas/G%5BV%5D"
+      "$ref": "#/components/schemas/G_V_"
     },
     "H": {
       "type": "number",
