@@ -292,7 +292,7 @@ func (g *Generator) AddOperation(path, method, tag string, in, out reflect.Type,
 	// Generate the default response from the tonic
 	// handler return type. If the handler has no output
 	// type, the response won't have a schema.
-	if err := g.setOperationResponse(op, out, strconv.Itoa(info.StatusCode), tonic.MediaType(), info.StatusDescription, info.Headers, nil, nil); err != nil {
+	if err := g.setOperationResponse(op, out, strconv.Itoa(info.StatusCode), strconv.Itoa(info.StatusCode), tonic.MediaType(), info.StatusDescription, info.Headers, nil, nil); err != nil {
 		return nil, err
 	}
 	// Generate additional responses from the operation
@@ -302,6 +302,7 @@ func (g *Generator) AddOperation(path, method, tag string, in, out reflect.Type,
 			if err := g.setOperationResponse(op,
 				reflect.TypeOf(resp.Model),
 				resp.Code,
+				strconv.Itoa(info.StatusCode),
 				tonic.MediaType(),
 				resp.Description,
 				resp.Headers,
@@ -365,8 +366,10 @@ func isResponseCodeRange(code string) bool {
 
 // setOperationResponse adds a response to the operation that
 // return the type t with the given media type and status code.
-func (g *Generator) setOperationResponse(op *Operation, t reflect.Type, code, mt, desc string, headers []*ResponseHeader, example interface{}, examples map[string]interface{}) error {
-	if _, ok := op.Responses[code]; ok {
+func (g *Generator) setOperationResponse(op *Operation, t reflect.Type, code, defaultCode string, mt, desc string, headers []*ResponseHeader, example interface{}, examples map[string]interface{}) error {
+	// Make sure responses aren't registered twice.
+	// Don't do this for the default code.
+	if _, ok := op.Responses[code]; code != defaultCode && ok {
 		// A response already exists for this code.
 		return fmt.Errorf("response with code %s already exists", code)
 	}

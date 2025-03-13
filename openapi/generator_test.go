@@ -662,29 +662,34 @@ func TestSetOperationResponseError(t *testing.T) {
 	op := &Operation{
 		Responses: make(Responses),
 	}
-	err := g.setOperationResponse(op, reflect.TypeOf(new(string)), "200", "application/json", "", nil, nil, nil)
+	err := g.setOperationResponse(op, reflect.TypeOf(new(string)), "200", "200", "application/json", "", nil, nil, nil)
 	assert.Nil(t, err)
 	assert.Equal(t, "OK", op.Responses["200"].Description)
 
-	err = g.setOperationResponse(op, reflect.TypeOf(new(string)), "429", "application/json", "testDesc", nil, nil, nil)
+	err = g.setOperationResponse(op, reflect.TypeOf(new(string)), "429", "429", "application/json", "testDesc", nil, nil, nil)
 	assert.Nil(t, err)
 	assert.Equal(t, "testDesc", op.Responses["429"].Description)
 
-	// Add another response with same code.
-	err = g.setOperationResponse(op, reflect.TypeOf(new(int)), "200", "application/xml", "", nil, nil, nil)
+	// Add another response with same code should work if it's the default.
+	err = g.setOperationResponse(op, reflect.TypeOf(new(int)), "200", "200", "application/xml", "", nil, nil, nil)
+	assert.Nil(t, err)
+	assert.Equal(t, "OK", op.Responses["200"].Description)
+
+	// Add another response with same code that's not the default should fail.
+	err = g.setOperationResponse(op, reflect.TypeOf(new(int)), "429", "200", "application/xml", "", nil, nil, nil)
 	assert.NotNil(t, err)
 
 	// Add invalid response code that cannot
 	// be converted to an integer.
-	err = g.setOperationResponse(op, reflect.TypeOf(new(bool)), "two-hundred", "", "", nil, nil, nil)
+	err = g.setOperationResponse(op, reflect.TypeOf(new(bool)), "two-hundred", "two-hundred", "", "", nil, nil, nil)
 	assert.NotNil(t, err)
 
 	// Add out of range response code.
-	err = g.setOperationResponse(op, reflect.TypeOf(new(bool)), "777", "", "", nil, nil, nil)
+	err = g.setOperationResponse(op, reflect.TypeOf(new(bool)), "777", "777", "", "", nil, nil, nil)
 	assert.NotNil(t, err)
 
 	// Cannot set both example and examples
-	err = g.setOperationResponse(op, reflect.TypeOf(new(bool)), "404", "", "", nil, "notFoundExample", map[string]interface{}{"badRequest": "message"})
+	err = g.setOperationResponse(op, reflect.TypeOf(new(bool)), "404", "404", "", "", nil, "notFoundExample", map[string]interface{}{"badRequest": "message"})
 	assert.NotNil(t, err)
 }
 
@@ -698,7 +703,7 @@ func TestSetOperationResponseExample(t *testing.T) {
 
 	error1 := map[string]interface{}{"error": "message1"}
 
-	err := g.setOperationResponse(op, reflect.TypeOf(new(string)), "400", "application/json", "", nil, error1, nil)
+	err := g.setOperationResponse(op, reflect.TypeOf(new(string)), "400", "400", "application/json", "", nil, error1, nil)
 	assert.Nil(t, err)
 
 	// assert example set correctly
@@ -720,7 +725,7 @@ func TestSetOperationResponseExamples(t *testing.T) {
 	error1 := map[string]interface{}{"error": "message1"}
 	error2 := map[string]interface{}{"error": "message2"}
 
-	err := g.setOperationResponse(op, reflect.TypeOf(new(string)), "400", "application/json", "", nil, nil,
+	err := g.setOperationResponse(op, reflect.TypeOf(new(string)), "400", "400", "application/json", "", nil, nil,
 		map[string]interface{}{
 			"one": error1,
 			"two": error2,
